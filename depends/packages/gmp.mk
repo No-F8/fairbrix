@@ -22,3 +22,11 @@ endef
 define $(package)_stage_cmds
   $(MAKE) DESTDIR=$($(package)_staging_dir) install
 endef
+
+define $(package)_fetch_cmds
+  for i in 1 2 3; do \
+    $(call fetch_file,$(package),$(package)_all_urls) && break; \
+    echo "GMP download attempt $$i failed, retrying in 5s..."; \
+    sleep 5; \
+  done
+endef
