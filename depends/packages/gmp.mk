@@ -26,9 +26,11 @@ define $(package)_stage_cmds
 endef
 
 define $(package)_fetch_cmds
-  for i in 1 2 3; do \
-    $(call fetch_file,$(package),$($(package)_all_urls))
-    echo "GMP download attempt $$i failed, retrying in 5s..."; \
-    sleep 5; \
-  done
+	for i in 1 2 3; do \
+		$(call fetch_file,$(package),$($(package)_all_urls)) && break; \
+		echo "GMP download attempt $$i failed, retrying in 5s..."; \
+		sleep 5; \
+	done
 endef
+
+
