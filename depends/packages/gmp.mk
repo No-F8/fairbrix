@@ -1,10 +1,10 @@
 package=gmp
 $(package)_version=6.2.1
+$(package)_download_path=https://gmplib.org/download/gmp/
 $(package)_file_name=$(package)-$($(package)_version).tar.bz2
 $(package)_sha256_hash=eae9326beb4158c386e39a356818031bd28f3124cf915f8c5b1dc4c7a36b4d7c
 
-$(package)_urls += https://gmplib.org/download/gmp/gmp-6.2.1.tar.bz2
-$(package)_urls += https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.bz2
+$(package)_urls += https://ftp.gnu.org/gnu/gmp/
 
 define $(package)_set_vars
 $(package)_config_opts=--disable-shared
