@@ -27,7 +27,7 @@ endef
 
 define $(package)_fetch_cmds
 	for i in 1 2 3; do \
-		$(call fetch_file,$(package),$($(package)_all_urls)) && break; \
+		$(call fetch_file,$(package),$($(package)_urls)) && break; \
 		echo "GMP download attempt $$i failed, retrying in 5s..."; \
 		sleep 5; \
 	done
