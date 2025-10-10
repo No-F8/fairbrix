@@ -1,4 +1,4 @@
-build_DOWNLOAD = curl --fail --location --connect-timeout 30 -v -o
+build_DOWNLOAD = curl --fail --location --connect-timeout 30 -o
 
 define int_vars
 #Set defaults for vars which may be overridden per-package
