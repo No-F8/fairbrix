@@ -1,4 +1,5 @@
-build_DOWNLOAD = curl --fail --location --connect-timeout 30 -o
+build_DOWNLOAD = curl --fail --location --connect-timeout 30 -v -o
+
 # Debugging wrapper for build_DOWNLOAD failures
 define debug_download
     echo "[DEBUG] Fetching $$2 → $$1" && \
@@ -41,7 +42,7 @@ endef
 
 define fetch_file_inner
     ( mkdir -p $$($(1)_download_dir) && echo Fetching $(3) from $(2) && \
-    $(call debug_download,$$($(1)_download_dir)/$(4).temp,$$(2)/$$(3)) && \
+    $(build_DOWNLOAD) "$$($(1)_download_dir)/$(4).temp" "$(2)/$(3)" && \
     echo "$(5)  $$($(1)_download_dir)/$(4).temp" > $$($(1)_download_dir)/.$(4).hash && \
     $(build_SHA256SUM) -c $$($(1)_download_dir)/.$(4).hash && \
     mv $$($(1)_download_dir)/$(4).temp $$($(1)_source_dir)/$(4) && \
