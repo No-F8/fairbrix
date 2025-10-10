@@ -1,18 +1,5 @@
 build_DOWNLOAD = curl --fail --location --connect-timeout 30 -v -o
 
-# Debugging wrapper for build_DOWNLOAD failures
-define debug_download
-    echo "[DEBUG] Fetching $$2 → $$1" && \
-    $(build_DOWNLOAD) "$$1" "$$2" || \
-    ( echo "[ERROR] curl failed with exit code $$? while fetching $$2"; \
-      echo "[ERROR] Directory: $$PWD"; \
-      echo "[ERROR] Available network interfaces:"; ip -brief addr || true; \
-      echo "[ERROR] DNS resolution test:"; getent hosts github.com || true; \
-      echo "[ERROR] Retrying with verbose curl output..."; \
-      curl -v --fail --location --connect-timeout 30 -o "$$1" "$$2" || true; \
-      exit 1 )
-endef
-
 define int_vars
 #Set defaults for vars which may be overridden per-package
 $(1)_cc=$$($$($(1)_type)_CC)
