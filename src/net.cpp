@@ -1833,6 +1833,12 @@ void CConnman::ThreadDNSAddressSeed()
         --seeds_right_now;
     }
     LogPrintf("%d addresses found from DNS seeds\n", found);
+
+    if (found > 0 && addrman.size() > 0) {
+    LogPrintf("DNS seeding complete — %d addresses added, triggering connection refresh\n", found);
+    // Signal the connection manager that we have fresh peers
+    SetTryNewOutboundPeer(true);
+    }
 }
 
 void CConnman::DumpAddresses()
