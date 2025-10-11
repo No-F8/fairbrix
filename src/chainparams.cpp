@@ -126,9 +126,7 @@ public:
         // release ASAP to avoid it where possible.
         vSeeds.emplace_back("fbx.kawaii.casa");
         vSeeds.emplace_back("fairbrix.dnsseed.multicoin.co");
-        vSeeds.emplace_back("51.75.117.211:8591");
-
-
+        
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,95);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,5);
         base58Prefixes[SCRIPT_ADDRESS2] = std::vector<unsigned char>(1,5);
