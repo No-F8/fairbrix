@@ -1902,6 +1902,7 @@ int CConnman::GetExtraOutboundCount()
 
 void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
 {
+    LogPrintf("ThreadOpenConnections: starting outbound connection loop\n");
     // Connect to specific addresses
     if (!connect.empty())
     {
@@ -2593,8 +2594,15 @@ bool CConnman::Start(CScheduler& scheduler, const Options& connOptions)
         }
         return false;
     }
-    if (connOptions.m_use_addrman_outgoing || !connOptions.m_specified_outgoing.empty())
-        threadOpenConnections = std::thread(&TraceThread<std::function<void()> >, "opencon", std::function<void()>(std::bind(&CConnman::ThreadOpenConnections, this, connOptions.m_specified_outgoing)));
+    //if (connOptions.m_use_addrman_outgoing || !connOptions.m_specified_outgoing.empty())
+        //threadOpenConnections = std::thread(&TraceThread<std::function<void()> >, "opencon", std::function<void()>(std::bind(&CConnman::ThreadOpenConnections, this, connOptions.m_specified_outgoing)));
+
+    // Always start outbound connection thread, even on first run with no peers.dat or conf
+    threadOpenConnections = std::thread(
+        &TraceThread<std::function<void()>>,
+        "opencon",
+        std::function<void()>(std::bind(&CConnman::ThreadOpenConnections, this, connOptions.m_specified_outgoing))
+    );
 
     // Process messages
     threadMessageHandler = std::thread(&TraceThread<std::function<void()> >, "msghand", std::function<void()>(std::bind(&CConnman::ThreadMessageHandler, this)));
