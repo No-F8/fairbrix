@@ -172,7 +172,7 @@ define $(package)_extract_cmds
   $(build_SHA256SUM) -c $($(package)_extract_dir)/.$($(package)_file_name).hash && \
   tar --no-same-owner -xf $($(package)_source) && \
   mv qt-everywhere-src-$($(package)_version)/* . && \
-  rmdir qt-everywhere-src-$($(package)_version)
+  rm -rf qt-everywhere-src-$($(package)_version)
 endef
 
 define $(package)_preprocess_cmds
