@@ -135,12 +135,11 @@ bool CMessageHeader::IsCommandValid() const
     return true;
 }
 
-
 ServiceFlags GetDesirableServiceFlags(ServiceFlags services) {
-    if ((services & NODE_NETWORK_LIMITED) && g_initial_block_download_completed) {
-        return ServiceFlags(NODE_NETWORK_LIMITED | NODE_WITNESS | NODE_MWEB);
-    }
-    return ServiceFlags(NODE_NETWORK | NODE_WITNESS | NODE_MWEB);
+    // FairBrix: relax requirement to only need basic network peers
+    // Older peers missing WITNESS or MWEB bits will now connect
+    // Legacy forks (<70000) are still rejected by MIN_PEER_PROTO_VERSION
+    return ServiceFlags(NODE_NETWORK);
 }
 
 void SetServiceFlagsIBDCache(bool state) {
