@@ -177,7 +177,6 @@ endef
 
 define $(package)_preprocess_cmds
   patch -p1 -N -r- -i $($(package)_patch_dir)/freetype_back_compat.patch || true && \
-  # fix_powerpc_libpng.patch removed (already upstream in Qt 5.12.12) && \
   sed -i.old "s|updateqm.commands = \$$$$\$$$$LRELEASE|updateqm.commands = $($(package)_extract_dir)/qttools/bin/lrelease|" qttranslations/translations/translations.pro && \
   patch -p1 -N -r- -i $($(package)_patch_dir)/drop_lrelease_dependency.patch || true && \
   patch -p1 -N -r- -i $($(package)_patch_dir)/dont_hardcode_pwd.patch || true && \
@@ -209,6 +208,7 @@ define $(package)_preprocess_cmds
   sed -i.old "s|QMAKE_CXX               = clang++|QMAKE_CXX               = $($(package)_cxx)|" qtbase/mkspecs/common/clang.conf && \
   sed -i.old "s/LIBRARY_PATH/(CROSS_)?\0/g" qtbase/mkspecs/features/toolchain.prf
 endef
+
 
 define $(package)_config_cmds
   export PKG_CONFIG_SYSROOT_DIR=/ && \
