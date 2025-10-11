@@ -176,32 +176,32 @@ define $(package)_extract_cmds
 endef
 
 define $(package)_preprocess_cmds
-  patch -p1 -i $($(package)_patch_dir)/freetype_back_compat.patch && \
-  patch -p1 -i $($(package)_patch_dir)/fix_powerpc_libpng.patch && \
+  patch -p1 -N -r- -i $($(package)_patch_dir)/freetype_back_compat.patch || true && \
+  # fix_powerpc_libpng.patch removed (already upstream in Qt 5.12.12) && \
   sed -i.old "s|updateqm.commands = \$$$$\$$$$LRELEASE|updateqm.commands = $($(package)_extract_dir)/qttools/bin/lrelease|" qttranslations/translations/translations.pro && \
-  patch -p1 -i $($(package)_patch_dir)/drop_lrelease_dependency.patch && \
-  patch -p1 -i $($(package)_patch_dir)/dont_hardcode_pwd.patch &&\
-  mkdir -p qtbase/mkspecs/macx-clang-linux &&\
-  cp -f qtbase/mkspecs/macx-clang/Info.plist.lib qtbase/mkspecs/macx-clang-linux/ &&\
-  cp -f qtbase/mkspecs/macx-clang/Info.plist.app qtbase/mkspecs/macx-clang-linux/ &&\
-  cp -f qtbase/mkspecs/macx-clang/qplatformdefs.h qtbase/mkspecs/macx-clang-linux/ &&\
+  patch -p1 -N -r- -i $($(package)_patch_dir)/drop_lrelease_dependency.patch || true && \
+  patch -p1 -N -r- -i $($(package)_patch_dir)/dont_hardcode_pwd.patch || true && \
+  mkdir -p qtbase/mkspecs/macx-clang-linux && \
+  cp -f qtbase/mkspecs/macx-clang/Info.plist.lib qtbase/mkspecs/macx-clang-linux/ && \
+  cp -f qtbase/mkspecs/macx-clang/Info.plist.app qtbase/mkspecs/macx-clang-linux/ && \
+  cp -f qtbase/mkspecs/macx-clang/qplatformdefs.h qtbase/mkspecs/macx-clang-linux/ && \
   cp -f $($(package)_patch_dir)/mac-qmake.conf qtbase/mkspecs/macx-clang-linux/qmake.conf && \
   cp -r qtbase/mkspecs/linux-arm-gnueabi-g++ qtbase/mkspecs/bitcoin-linux-g++ && \
   sed -i.old "s/arm-linux-gnueabi-/$(host)-/g" qtbase/mkspecs/bitcoin-linux-g++/qmake.conf && \
-  patch -p1 -i $($(package)_patch_dir)/fix_qt_pkgconfig.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/fix_configure_mac.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/fix_no_printer.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/fix_rcc_determinism.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/xkb-default.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/fix_android_qmake_conf.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/fix_android_jni_static.patch &&\
+  patch -p1 -N -r- -i $($(package)_patch_dir)/fix_qt_pkgconfig.patch || true && \
+  patch -p1 -N -r- -i $($(package)_patch_dir)/fix_configure_mac.patch || true && \
+  patch -p1 -N -r- -i $($(package)_patch_dir)/fix_no_printer.patch || true && \
+  patch -p1 -N -r- -i $($(package)_patch_dir)/fix_rcc_determinism.patch || true && \
+  patch -p1 -N -r- -i $($(package)_patch_dir)/xkb-default.patch || true && \
+  patch -p1 -N -r- -i $($(package)_patch_dir)/fix_android_qmake_conf.patch || true && \
+  patch -p1 -N -r- -i $($(package)_patch_dir)/fix_android_jni_static.patch || true && \
   echo "!host_build: QMAKE_CFLAGS     += $($(package)_cflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_CXXFLAGS   += $($(package)_cxxflags) $($(package)_cppflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
   echo "!host_build: QMAKE_LFLAGS     += $($(package)_ldflags)" >> qtbase/mkspecs/common/gcc-base.conf && \
-  patch -p1 -i $($(package)_patch_dir)/fix_riscv64_arch.patch &&\
-  patch -p1 -i $($(package)_patch_dir)/no-xlib.patch &&\
-  echo "QMAKE_LINK_OBJECT_MAX = 10" >> qtbase/mkspecs/win32-g++/qmake.conf &&\
-  echo "QMAKE_LINK_OBJECT_SCRIPT = object_script" >> qtbase/mkspecs/win32-g++/qmake.conf &&\
+  patch -p1 -N -r- -i $($(package)_patch_dir)/fix_riscv64_arch.patch || true && \
+  patch -p1 -N -r- -i $($(package)_patch_dir)/no-xlib.patch || true && \
+  echo "QMAKE_LINK_OBJECT_MAX = 10" >> qtbase/mkspecs/win32-g++/qmake.conf && \
+  echo "QMAKE_LINK_OBJECT_SCRIPT = object_script" >> qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_CFLAGS           += |!host_build: QMAKE_CFLAGS            = $($(package)_cflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "s|QMAKE_CXXFLAGS         += |!host_build: QMAKE_CXXFLAGS            = $($(package)_cxxflags) $($(package)_cppflags) |" qtbase/mkspecs/win32-g++/qmake.conf && \
   sed -i.old "0,/^QMAKE_LFLAGS_/s|^QMAKE_LFLAGS_|!host_build: QMAKE_LFLAGS            = $($(package)_ldflags)\n&|" qtbase/mkspecs/win32-g++/qmake.conf && \
