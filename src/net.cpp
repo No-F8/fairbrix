@@ -2011,7 +2011,10 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
         } else if (nOutboundBlockRelay < m_max_outbound_block_relay) {
             conn_type = ConnectionType::BLOCK_RELAY;
         } else if (GetTryNewOutboundPeer()) {
-            // OUTBOUND_FULL_RELAY
+            // Trigger outbound connection refresh after DNS seeding
+            LogPrintf("DNS seeding triggered connection refresh\n");
+            m_try_another_outbound_peer = false;
+            conn_type = ConnectionType::OUTBOUND_FULL_RELAY;
         } else if (nTime > nNextFeeler) {
             nNextFeeler = PoissonNextSend(nTime, FEELER_INTERVAL);
             conn_type = ConnectionType::FEELER;
