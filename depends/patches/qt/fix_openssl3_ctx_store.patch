@@ -1,0 +1,36 @@
+--- a/qtbase/src/network/ssl/qsslsocket_openssl_symbols.cpp
++++ b/qtbase/src/network/ssl/qsslsocket_openssl_symbols.cpp
+@@ -543,7 +543,32 @@
+ DEFINEFUNC(int, X509_STORE_CTX_get_error, X509_STORE_CTX *a, a, return -1, return)
+ DEFINEFUNC(int, X509_STORE_CTX_get_error_depth, X509_STORE_CTX *a, a, return -1, return)
+ DEFINEFUNC(X509 *, X509_STORE_CTX_get_current_cert, X509_STORE_CTX *a, a, return nullptr, return)
+-DEFINEFUNC(X509_STORE *, X509_STORE_CTX_get0_store, X509_STORE_CTX *ctx, ctx, return nullptr, return)
++
++// OpenSSL 3.x compatibility shim: X509_STORE_CTX_get0_store() was removed.
++// Define a replacement that calls the new API if available.
++#if OPENSSL_VERSION_NUMBER >= 0x30000000L
++X509_STORE *q_X509_STORE_CTX_get0_store(X509_STORE_CTX *ctx)
++{
++#if defined(X509_STORE_CTX_get0_cert_store)
++    // OpenSSL 3.x: use the new function
++    return ctx ? X509_STORE_CTX_get0_cert_store(ctx) : nullptr;
++#else
++    // Very old OpenSSL builds may lack both
++    return nullptr;
++#endif
++}
++#else
++// OpenSSL 1.x and LibreSSL: original function still exists
++X509_STORE *q_X509_STORE_CTX_get0_store(X509_STORE_CTX *ctx)
++{
++#ifdef X509_STORE_CTX_get0_store
++    return ctx ? X509_STORE_CTX_get0_store(ctx) : nullptr;
++#else
++    return nullptr;
++#endif
++}
++#endif
++
+ DEFINEFUNC(X509_STORE_CTX *, X509_STORE_CTX_new, DUMMYARG, DUMMYARG, return nullptr, return)
+ DEFINEFUNC2(void *, X509_STORE_CTX_get_ex_data, X509_STORE_CTX *ctx, ctx, int idx, idx, return nullptr, return)
+ DEFINEFUNC(int, SSL_get_ex_data_X509_STORE_CTX_idx, DUMMYARG, DUMMYARG, return -1, return)
