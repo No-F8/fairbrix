@@ -6,6 +6,12 @@ AC_DEFUN([BITCOIN_FIND_BDB48],[
   AC_ARG_VAR(BDB_CFLAGS, [C compiler flags for BerkeleyDB, bypasses autodetection])
   AC_ARG_VAR(BDB_LIBS, [Linker flags for BerkeleyDB, bypasses autodetection])
 
+  # Add depends include/lib paths if they exist
+  if test -d "$srcdir/depends/x86_64-pc-linux-gnu/include"; then
+    CPPFLAGS="$CPPFLAGS -I$srcdir/depends/x86_64-pc-linux-gnu/include"
+    LDFLAGS="$LDFLAGS -L$srcdir/depends/x86_64-pc-linux-gnu/lib"
+  fi
+
   if test "x$BDB_CFLAGS" = "x"; then
     AC_MSG_CHECKING([for Berkeley DB C++ headers])
     BDB_CPPFLAGS=
